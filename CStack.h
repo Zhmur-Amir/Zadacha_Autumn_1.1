@@ -1,21 +1,28 @@
 #pragma once
 #include <math.h>
-#include <string.h>
+#include <string>
 #include <iostream>
 #include <stdio.h>
+#include "CStack2.h"
 #include <fstream>
 using namespace std;
-#define N 3
+#define L 5
 
 
 class CStack
 {
-    int n; string s[N];
+    int n,size1,size2,size3; string *s;;
 public:
-    CStack(){n=0;}
-    void Clean(){n=0;}
+    CStack(int b){SetZero(); size3=b; s=new string[size1=L];}
+    void SetZero(){s=NULL; n=size1=size2=0;}
+    CStack(const CStack&b){CopyOnly(b);}
+    void CopyOnly(const CStack&b){n=b.n; size2=b.size2; size3=b.size3; s=new string[size1=b.size1]; for(int i=0;i<n;i++){s[i]=b.s[i];}}
+    void Clean(){delete[] s; SetZero();}
+    ~CStack(){Clean();}
+    CStack &operator=(const CStack&b){if(this!=&b){Clean(); CopyOnly(b);}return *this;}
     int IsEmpty(){return n==0;}
-    int IsFilled(){return n==N;}
+    int IsFilled(){return n==size1;}
+    int IsMemory(){return size2>size3;}
     int GetTop(string&x)
     {
         if(IsEmpty())
@@ -23,20 +30,39 @@ public:
         x=s[n-1];
         return 0;
     }
-
+    int Memory(){return size2;}
+    int FullMemory(){return size3;}
     int PushTop(const string&x)
     {
+        size2=size2+x.length();
+        if(IsMemory())
+        {
+           size2=size2-x.length();
+           return -2;
+        }
+
         if(IsFilled())
-            return -2;
+        {
+            string *w=new string[size1=size1*2+1];
+            for(int i=0;i<n;i++)
+                {
+                    w[i]=s[i];
+                }
+            delete[] s;
+            s=w;
+        }
         s[n++]=x;
         return 0;
     }
     int DelTop()
     {
         if(IsEmpty())
-            return -1;
+            {return -1;}
+        int k;
+        k=LenTop();
+        size2=size2-k;
         n--;
-         return 0;
+        return 0;
     }
     int Length(){return n;}
     int LenTop()
@@ -58,11 +84,11 @@ public:
     }
 };
 
-int Push(const string&x, CStack &c, const char* filename);
-int Del(CStack &c, const char* filename);
-int Get(string&x, CStack &c,const char* filename);
+int Push(const string&x, CStack &c, CStack2 &h, const char* filename);
+int Del(CStack &c, CStack2 &r, const char* filename);
+int Get(string&x, CStack &c, CStack2 &r, const char* filename);
 void Autotest(void);
-void vvod(CStack&c, const char* filename);
+void vvod(CStack&c, CStack2 &r, const char* filename);
 
 
 

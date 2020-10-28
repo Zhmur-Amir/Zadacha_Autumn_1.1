@@ -1,13 +1,21 @@
 #include "CStack.h"
+#include "CStack2.h"
 
 
 void Autotest(void)
 {
-   CStack c,b;
+   CStack c(100),b(100);
+   CStack2 a;
    string x,t,q, y="abc101", k="hello",h="bye";
    bool s=true;
    const char* f="auto.txt";
    cout<<"==============================="<<endl<<"Autotest started..."<<endl;
+   ofstream file("auto.txt");
+   if(!file)
+   {
+        cout<<"Error! Cannot open file..."<<endl;
+   }
+   file.close();
    c.PushTop(y);
    if(c[0]!=y)
    {
@@ -23,15 +31,15 @@ void Autotest(void)
    {
        s=false;
    }
-   Push(y,b,f);
-   Push(k,b,f);
-   Push(h,b,f);
-   Get(x,b,f);
-   Del(b,f);
-   Get(t,b,f);
-   Del(b,f);
-   Get(q,b,f);
-   Del(b,f);
+   Push(y,b,a,f);
+   Push(k,b,a,f);
+   Push(h,b,a,f);
+   Get(x,b,a,f);
+   Del(b,a,f);
+   Get(t,b,a,f);
+   Del(b,a,f);
+   Get(q,b,a,f);
+   Del(b,a,f);
    if( x==h && t==k && q==y)
    {
    }
