@@ -1,9 +1,11 @@
 #include "CStack.h"
+#include "CStack2.h"
 
-int Push(const string&x, CStack &c, const char* filename)
+
+int CStack :: Push(const string&x, CStack2 &h, const char* filename)
 {
     int m=0;
-    m=c.PushTop(x);
+    m=PushTop(x);
     if (m!=0)
     {
         ofstream file(filename, ios::app);
@@ -12,14 +14,15 @@ int Push(const string&x, CStack &c, const char* filename)
             cout<<"Error! Cannot open file..."<<endl;
             return -1;
         }
-        for(int i=0; i<N; i++)
+        for(int i=0; i<Length(); i++)
         {
-            file<<c[i]<<endl;
+            file<<s[i]<<endl;
         }
 
         file<<"-------------------------"<<endl;
-        c.Clean();
-        m=c.PushTop(x);
+        h.PushTop(Length());
+        Clean();
+        m=PushTop(x);
         file.close();
         return 1;
     }
@@ -27,10 +30,10 @@ int Push(const string&x, CStack &c, const char* filename)
     return 0;
 }
 
-int Del(CStack &c, const char* filename)
+int CStack ::  Del(CStack2 &r, const char* filename)
 {
     int m=0;
-    m=c.DelTop();
+    m=DelTop();
 
     if(m!=0)
     {
@@ -64,9 +67,11 @@ int Del(CStack &c, const char* filename)
            str[u]=line;
            u++;
         }
+        int N;
+        N=r.GetTop();
         for (int d=j-N-1; d<j-2;d++)
         {
-            c.PushTop(str[d]);
+            PushTop(str[d]);
         }
         file2.close();
         ofstream file1(filename);
@@ -83,6 +88,7 @@ int Del(CStack &c, const char* filename)
 
         delete[] str;
         str=NULL;
+        r.DelTop();
         return 1;
     }
 
@@ -90,10 +96,10 @@ int Del(CStack &c, const char* filename)
 
 }
 
-int Get(string&x, CStack &c,const char* filename )
+int  CStack :: Get(string&x, CStack2 &r, const char* filename )
 {
     int m=0;
-    m=c.GetTop(x);
+    m=GetTop(x);
 
     if(m!=0)
     {
@@ -127,9 +133,11 @@ int Get(string&x, CStack &c,const char* filename )
            str[u]=line;
            u++;
         }
+        int N;
+        N=r.GetTop();
         for (int d=j-N-1; d<j-1;d++)
         {
-            c.PushTop(str[d]);
+            PushTop(str[d]);
         }
         file2.close();
         ofstream file1(filename);
@@ -146,8 +154,8 @@ int Get(string&x, CStack &c,const char* filename )
 
         delete[] str;
         str=NULL;
-
-        m=c.GetTop(x);
+        r.DelTop();
+        m=GetTop(x);
         return 1;
 
     }
@@ -156,7 +164,7 @@ int Get(string&x, CStack &c,const char* filename )
 
 }
 
-void vvod(CStack&c, const char* f)
+void vvod(CStack&c, CStack2 &r, const char* f)
 {
 string b;
 int a=0;
@@ -178,18 +186,24 @@ while(a!=6)
   {
       cout<<"Write down your string:"<<endl;
       cin>>b;
-      Push(b,c,f);
+      int u=c.FullMemory();
+      if(b.length()>u)
+      {
+          cout<<"Error! Too big number";
+             exit(1);
+      }
+      c.Push(b,r,f);
   }
   if(a==2)
   {
       cout<<"The top string is:"<<endl;
-      Get(b,c,f);
+      c.Get(b,r,f);
       cout<<b<<endl;
   }
   if(a==3)
   {
       cout<<"Deleting top string..."<<endl;
-      Del(c,f);
+      c.Del(r,f);
   }
   if(a==4)
   {
