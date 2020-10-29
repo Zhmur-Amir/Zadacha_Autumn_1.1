@@ -13,6 +13,7 @@ class CStack
 {
     int n,size1,size2,size3; string *s;;
 public:
+    CStack()=delete;
     CStack(int b)
     {SetZero();
     size3=b;
